@@ -1,0 +1,10 @@
+# IDE and system files
+.DS_Store
+Thumbs.db
+*.log
+.gemini/
+claude/
+node_modules/
+dist/
+build/
+*.tmp
