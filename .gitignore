@@ -8,3 +8,4 @@ node_modules/
 dist/
 build/
 *.tmp
+backup-static-version/
