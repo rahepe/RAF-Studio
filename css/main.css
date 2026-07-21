@@ -584,18 +584,29 @@ body {
   border-radius: var(--radius-xl);
   overflow: hidden;
   box-shadow: 0 32px 100px rgba(0,0,0,0.60), 0 0 0 1px rgba(255,255,255,0.06);
-  animation: heroFloat 8s ease-in-out infinite;
-}
-
-@keyframes heroFloat {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-12px); }
-}
-
-.hero__image-wrapper img {
+  aspect-ratio: 16 / 9;
   width: 100%;
-  height: auto;
+  background: rgba(255, 255, 255, 0.015);
+}
+
+#hero-3d-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 2;
   display: block;
+}
+
+#hero-fallback-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
 }
 
 .hero__image-glow {
@@ -604,6 +615,7 @@ body {
   border-radius: inherit;
   background: linear-gradient(135deg, var(--accent-glow) 0%, transparent 60%);
   pointer-events: none;
+  z-index: 3;
 }
 
 /* Floating card */
@@ -1695,33 +1707,31 @@ body {
   color: rgba(255,255,255,0.70);
 }
 
-/* ─── WebGL 3D Background Canvas ─────────── */
-#webgl-canvas {
+/* ─── Smooth Inertia Scroll ─────────── */
+body.is-desktop {
+  overflow-x: hidden;
+}
+.is-desktop #smooth-wrapper {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0.8;
-  mix-blend-mode: screen;
+  overflow: hidden;
 }
-
-/* Ensure sections that should cover the canvas have relative positioning and background */
-.hero, .section--dark, .section--darker, .contact-section {
+.is-desktop #smooth-content {
+  width: 100%;
   position: relative;
-  z-index: 2;
+  will-change: transform;
 }
 
-/* Light sections should block the fixed canvas naturally */
-.section:not(.section--dark):not(.section--darker):not(.contact-section) {
-  position: relative;
-  z-index: 3;
-  background-color: var(--white);
+/* ─── Split Line Reveals ─────────── */
+.split-line-wrapper {
+  overflow: hidden;
+  display: block;
 }
-
-.section--light {
-  background-color: var(--gray-50) !important;
+.split-line-content {
+  display: inline-block;
+  will-change: transform;
 }
 

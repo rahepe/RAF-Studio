@@ -66,9 +66,6 @@
 
 <body>
 
-  <!-- WebGL Canvas for 3D backgrounds -->
-  <canvas id="webgl-canvas"></canvas>
-
   <!-- ─── Scroll Progress Bar ──────────────── -->
   <div id="scroll-progress" class="scroll-progress" role="progressbar" aria-label="Progresso de leitura da página"></div>
 
@@ -118,7 +115,9 @@
     <a href="#contato"    class="nav__mobile-cta">Solicitar proposta</a>
   </div>
 
-  <main id="main-content">
+  <div id="smooth-wrapper">
+    <div id="smooth-content">
+      <main id="main-content">
 
     <!-- ══════════════════════════════════════
          01 — HERO
@@ -193,13 +192,15 @@
         </div>
 
         <!-- Visual -->
-        <div class="hero__visual reveal-right">
-          <div class="hero__image-wrapper">
+        <div class="hero__visual">
+          <div class="hero__image-wrapper" id="hero-interactive-container">
+            <canvas id="hero-3d-canvas"></canvas>
             <img
               src="assets/images/hero-visual.jpg"
               alt="Mockup de site premium desenvolvido pela RAF Studio — laptop e celular exibindo interface profissional"
               width="720"
               height="405"
+              id="hero-fallback-image"
               loading="eager"
               fetchpriority="high"
             />
@@ -999,6 +1000,8 @@
 
     </div>
   </footer>
+  </div> <!-- #smooth-content -->
+  </div> <!-- #smooth-wrapper -->
 
   <!-- ─── WhatsApp FAB ──────────────────────── -->
   <a
@@ -1022,6 +1025,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="js/inertia-scroll.js"></script>
   <script src="js/animations.js"></script>
   <script src="js/main.js"></script>
   <script src="js/form.js"></script>
