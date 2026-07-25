@@ -575,94 +575,262 @@ body {
   display: none;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .hero__visual { display: block; }
 }
 
+/* Stage for the opening-laptop illustration */
 .hero__image-wrapper {
   position: relative;
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-  box-shadow: 0 32px 100px rgba(0,0,0,0.60), 0 0 0 1px rgba(255,255,255,0.06);
-  aspect-ratio: 16 / 9;
   width: 100%;
-  background: rgba(255, 255, 255, 0.015);
-}
-
-#hero-3d-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100% !important;
-  height: 100% !important;
-  z-index: 2;
-  display: block;
-}
-
-#hero-fallback-image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 1;
-}
-
-.hero__image-glow {
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  background: linear-gradient(135deg, var(--accent-glow) 0%, transparent 60%);
-  pointer-events: none;
-  z-index: 3;
-}
-
-/* Floating card */
-.hero__floating-card {
-  position: absolute;
-  bottom: -24px;
-  left: -32px;
-  background: rgba(22,22,22,0.95);
-  border: var(--border-light);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4) var(--space-5);
-  backdrop-filter: blur(20px);
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  box-shadow: var(--shadow-xl);
-  animation: cardFloat 10s ease-in-out infinite 1s;
-}
-
-@keyframes cardFloat {
-  0%, 100% { transform: translate(0, 0); }
-  50%       { transform: translate(4px, -6px); }
-}
-
-.hero__floating-card-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-sm);
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+  aspect-ratio: 4 / 3;
   display: flex;
   align-items: center;
   justify-content: center;
+  perspective: 1700px;
+}
+
+/* Whole device: gentle idle float + slight 3D tilt */
+.device {
+  position: relative;
+  width: 100%;
+  perspective: 1500px;   /* gives the lid a real 3D swing as it opens */
+  transform: rotateX(5deg);
+  animation: deviceFloat 8s ease-in-out infinite 2.2s;
+}
+
+/* Laptop lid: dark display inside a space-gray aluminium bezel (border),
+   folded shut and opening on load. The transform lives here so the screen
+   is its own stacking context and the mini-site paints correctly. */
+.device__screen {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: #0b0b0f;
+  border: 13px solid #45464b;              /* the aluminium bezel */
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow:
+    0 44px 90px rgba(0,0,0,0.60),
+    0 0 0 1px rgba(255,255,255,0.10),       /* outer edge catch-light */
+    inset 0 0 0 1px rgba(0,0,0,0.7);        /* display inner edge */
+  transform-origin: center bottom;
+  transform: rotateX(-90deg);
+  /* spring-ish curve = physical hinge that settles as it opens */
+  animation: lidOpen 1.3s cubic-bezier(0.34, 1.42, 0.44, 1) 0.5s forwards;
+}
+/* webcam dot at the top of the display */
+.device__screen::before {
+  content: "";
+  position: absolute;
+  top: 5px; left: 50%;
+  transform: translateX(-50%);
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #6a6b70, #202124);
+  z-index: 4;
+}
+
+/* Backlight that switches on once the lid is up */
+.device__screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(130% 120% at 28% -10%, rgba(99,102,241,0.22), transparent 55%), #0b0b0f;
+  opacity: 0;
+  z-index: 0;
+  animation: screenOn 0.6s ease 1.5s forwards;
+}
+
+/* Mini website that assembles inside the screen */
+.device__ui {
+  position: absolute;
+  inset: 0;
+  padding: 7% 7% 0;
+  z-index: 1;
+  opacity: 0;
+  animation: screenOn 0.5s ease 1.65s forwards;
+}
+
+.device__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 9%;
+}
+
+.device__logo {
+  width: 24%;
+  height: 10px;
+  border-radius: 5px;
+  background: linear-gradient(90deg, var(--accent-light), var(--accent));
+}
+
+.device__dots { display: flex; gap: 5px; }
+.device__dots i {
+  width: 7px; height: 7px; border-radius: var(--radius-full);
+  background: rgba(255,255,255,0.20);
+}
+
+.device__line {
+  border-radius: 6px;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: uiIn 0.5s var(--ease-out) forwards;
+}
+.device__line--title {
+  height: 16px; width: 82%; margin-bottom: 10px;
+  background: linear-gradient(90deg, #fff, rgba(255,255,255,0.55));
+  animation-delay: 1.85s;
+}
+.device__line--title.short { width: 54%; animation-delay: 1.98s; }
+.device__line--text {
+  height: 9px; width: 68%; margin-top: 14px;
+  background: rgba(255,255,255,0.14);
+  animation-delay: 2.12s;
+}
+
+.device__btn {
+  width: 36%; height: 24px; margin-top: 18px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  box-shadow: 0 8px 22px rgba(99,102,241,0.50);
+  opacity: 0;
+  transform: translateY(10px);
+  animation: uiIn 0.5s var(--ease-out) 2.28s forwards;
+}
+
+.device__cards { display: flex; gap: 5%; margin-top: 9%; }
+.device__card {
+  flex: 1;
+  aspect-ratio: 1 / 1;
+  border-radius: 9px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.07);
+  opacity: 0;
+  transform: translateY(10px);
+  animation: uiIn 0.5s var(--ease-out) forwards;
+}
+.device__card:nth-child(1) { animation-delay: 2.45s; }
+.device__card:nth-child(2) { animation-delay: 2.55s; }
+.device__card:nth-child(3) { animation-delay: 2.65s; }
+
+/* Soft screen glare */
+.device__glare {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(115deg, transparent 42%, rgba(255,255,255,0.05) 50%, transparent 58%);
+}
+
+/* Aluminium keyboard deck — trapezoid so it reads as a laptop receding */
+.device__base {
+  position: relative;
+  width: 128%;
+  left: -14%;
+  height: 30px;
+  margin-top: -1px;
+  clip-path: polygon(3% 0, 97% 0, 100% 100%, 0 100%);
+  background: linear-gradient(180deg, #55565b 0%, #3e3f44 32%, #2a2b2f 100%);
+  border-radius: 2px 2px 12px 12px;
+  box-shadow: 0 34px 55px rgba(0,0,0,0.55);
+}
+/* hinge shadow line at the back of the deck */
+.device__base::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 6%; right: 6%;
+  height: 4px;
+  border-radius: 0 0 5px 5px;
+  background: linear-gradient(180deg, rgba(0,0,0,0.55), rgba(255,255,255,0.10));
+}
+/* trackpad */
+.device__base::after {
+  content: "";
+  position: absolute;
+  bottom: 6px; left: 50%;
+  transform: translateX(-50%);
+  width: 26%; height: 8px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #34353a, #43444a);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.4), inset 0 -1px 0 rgba(255,255,255,0.08);
+}
+
+/* Soft contact shadow on the "desk" (stays put while the device breathes) */
+.hero__image-wrapper::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 6%;
+  width: 74%;
+  height: 26px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.55), transparent 70%);
+  filter: blur(14px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+@keyframes lidOpen  { from { transform: rotateX(-90deg); } to { transform: rotateX(0deg); } }
+@keyframes screenOn { to { opacity: 1; } }
+@keyframes uiIn     { to { opacity: 1; transform: translateY(0); } }
+@keyframes deviceFloat {
+  0%, 100% { transform: rotateX(5deg) translateY(0); }
+  50%      { transform: rotateX(5deg) translateY(-5px); }
+}
+
+/* Reduced-motion: keep the meaningful open + assemble, but stop the
+   perpetual idle float (that's the ambient motion worth suppressing).
+   The scroll-close is user-driven (JS) and stays on. */
+@media (prefers-reduced-motion: reduce) {
+  .device { animation: none !important; }
+}
+
+/* Result badge INSIDE the laptop screen — a "notification" popping up on the site */
+.device__badge {
+  position: absolute;
+  right: 5%;
+  bottom: 6%;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(18,18,22,0.92);
+  border: 1px solid rgba(255,255,255,0.10);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.5);
+  opacity: 0;
+  transform: translateY(10px);
+  animation: uiIn 0.5s var(--ease-out) 2.9s forwards;  /* pops in last, after the UI assembles */
+}
+
+.device__badge-icon {
+  width: 22px;
+  height: 22px;
   flex-shrink: 0;
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+.device__badge-icon svg { width: 12px; height: 12px; }
 
-.hero__floating-card-text {
-  font-size: var(--text-xs);
-  color: rgba(255,255,255,0.50);
-  line-height: 1.3;
+.device__badge-text {
+  font-size: 8.5px;
+  line-height: 1.25;
+  color: rgba(255,255,255,0.55);
+  white-space: nowrap;
 }
-
-.hero__floating-card-text strong {
+.device__badge-text strong {
   display: block;
-  font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
-  color: var(--white);
-  margin-bottom: 2px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
 }
 
 /* ─── Section Styles ──────────────────────── */
@@ -960,57 +1128,86 @@ body {
 }
 
 .portfolio-card {
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  position: relative;
   background: var(--gray-900);
   border: var(--border-light);
-  aspect-ratio: 4 / 3;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--duration-slow) var(--ease-out),
+              border-color var(--duration-slow) var(--ease-out),
+              box-shadow var(--duration-slow) var(--ease-out);
+}
+
+.portfolio-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(99,102,241,0.35);
+  box-shadow: var(--shadow-xl);
+}
+
+/* Browser-window chrome */
+.portfolio-card__bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 16px;
+  background: var(--gray-800);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.portfolio-card__bar span {
+  width: 9px;
+  height: 9px;
+  border-radius: var(--radius-full);
+  background: rgba(255,255,255,0.16);
+}
+
+.portfolio-card__shot {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
 }
 
 .portfolio-card__image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: top center;
   display: block;
-  transition: transform var(--duration-slowest) var(--ease-out),
-              filter var(--duration-slow) var(--ease-out);
+  transition: transform var(--duration-slowest) var(--ease-out);
 }
 
 .portfolio-card:hover .portfolio-card__image {
-  transform: scale(1.05);
-  filter: brightness(0.5);
+  transform: scale(1.04);
 }
 
+/* Hover description overlay (over the screenshot only) */
 .portfolio-card__overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(6,6,6,0.95) 0%, rgba(6,6,6,0.40) 50%, transparent 100%);
+  background: linear-gradient(to top, rgba(6,6,6,0.94) 0%, rgba(6,6,6,0.45) 55%, transparent 100%);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   padding: var(--space-6);
   opacity: 0;
-  transform: translateY(8px);
-  transition: opacity var(--duration-slow) var(--ease-out),
-              transform var(--duration-slow) var(--ease-out);
+  transition: opacity var(--duration-slow) var(--ease-out);
 }
 
 .portfolio-card:hover .portfolio-card__overlay {
   opacity: 1;
-  transform: translateY(0);
 }
 
-/* Always visible bottom label */
-.portfolio-card__label {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: var(--space-6) var(--space-5) var(--space-4);
-  background: linear-gradient(to top, rgba(4,4,4,0.92) 0%, rgba(4,4,4,0.50) 60%, transparent 100%);
-  transition: opacity var(--duration-slow) var(--ease-out);
+.portfolio-card__description {
+  font-size: var(--text-sm);
+  color: rgba(255,255,255,0.92);
+  line-height: var(--leading-relaxed);
+}
+
+/* Caption below the window */
+.portfolio-card__footer {
+  padding: var(--space-5);
 }
 
 .portfolio-card__industry {
@@ -1019,20 +1216,13 @@ body {
   letter-spacing: var(--tracking-widest);
   text-transform: uppercase;
   color: var(--accent-lighter);
-  margin-bottom: var(--space-1);
+  margin-bottom: var(--space-2);
 }
 
 .portfolio-card__name {
-  font-size: var(--text-lg);
+  font-size: var(--text-md);
   font-weight: var(--weight-semibold);
   color: var(--white);
-}
-
-.portfolio-card__description {
-  font-size: var(--text-sm);
-  color: rgba(255,255,255,0.65);
-  line-height: var(--leading-relaxed);
-  margin-top: var(--space-3);
 }
 
 /* ─── Process ─────────────────────────────── */

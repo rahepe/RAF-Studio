@@ -124,7 +124,7 @@
         : WHATSAPP;
       el.addEventListener('click', (e) => {
         e.preventDefault();
-        window.open(url, '_blank');
+        window.open(url, '_blank', 'noopener');
       });
     });
   }
@@ -182,5 +182,9 @@
     initWhatsAppLinks();
     initActiveNav();
     initCardGlow();
+
+    // Footer year
+    const yearEl = document.getElementById('footer-year');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
   });
 })();

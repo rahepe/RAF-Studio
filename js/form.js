@@ -52,7 +52,7 @@
 
       // Small delay for UX, then redirect
       setTimeout(() => {
-        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${waText}`, '_blank');
+        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${waText}`, '_blank', 'noopener');
 
         // Show success
         form.style.display = 'none';
