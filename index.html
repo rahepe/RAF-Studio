@@ -193,36 +193,20 @@
 
         <!-- Visual -->
         <div class="hero__visual">
-          <div class="hero__image-wrapper">
-            <div class="device" role="img" aria-label="Ilustração de um notebook abrindo e revelando um site profissional montado pela RAF Studio">
-              <div class="device__screen">
-                <div class="device__ui">
-                  <div class="device__nav">
-                    <span class="device__logo"></span>
-                    <span class="device__dots"><i></i><i></i><i></i></span>
-                  </div>
-                  <div class="device__line device__line--title"></div>
-                  <div class="device__line device__line--title short"></div>
-                  <div class="device__line device__line--text"></div>
-                  <div class="device__btn"></div>
-                  <div class="device__cards">
-                    <div class="device__card"></div>
-                    <div class="device__card"></div>
-                    <div class="device__card"></div>
-                  </div>
-                  <div class="device__badge" aria-hidden="true">
-                    <span class="device__badge-icon">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                    </span>
-                    <span class="device__badge-text">
-                      <strong>+312% de acessos</strong>
-                      Após o novo site entrar no ar
-                    </span>
-                  </div>
-                </div>
-                <div class="device__glare" aria-hidden="true"></div>
-              </div>
-              <div class="device__base" aria-hidden="true"></div>
+          <div
+            class="hero-network-frame"
+            role="img"
+            aria-label="Visualização animada de uma rede de conexões digitais, representando o ecossistema online do seu negócio"
+          >
+            <canvas id="hero-network"></canvas>
+            <div class="hero__badge-card" aria-hidden="true">
+              <span class="hero__badge-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              </span>
+              <span class="hero__badge-text">
+                <strong>+312% de acessos</strong>
+                Após o novo site entrar no ar
+              </span>
             </div>
           </div>
         </div>
@@ -1053,6 +1037,7 @@
   <script src="js/main.js"></script>
   <script src="js/form.js"></script>
   <script src="js/hero.js?v=6"></script>
+  <script src="js/network-canvas.js"></script>
 
 </body>
 </html>

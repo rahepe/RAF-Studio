@@ -1,7 +1,7 @@
 /* ============================================
    RAF Studio — Hero Motion
    GSAP: magnetic buttons + headline reveal
-   (The opening-laptop visual is pure CSS — see main.css)
+   (The network visual lives in js/network-canvas.js)
    ============================================ */
 
 (function () {
@@ -48,55 +48,6 @@
       .to('.hero__actions .btn', { opacity: 1, y: 0, duration: 0.6, stagger: 0.12, ease: 'power2.out' }, '-=0.5');
   }
 
-  // ─── Scroll-linked lid close ─────────────────────────
-  // Laptop opens on load; as the hero scrolls away the lid closes and the
-  // device recedes, pulling attention down to the rest of the site.
-  function initScrollClose() {
-    const lid = document.querySelector('.device__screen');
-    const device = document.querySelector('.device');
-    const hero = document.getElementById('hero');
-    if (!lid || !device || !hero) return;
-
-    const CLOSE_DEG = 74;     // how far the lid folds shut at full scroll
-    const FADE_TO = 0.5;      // device opacity at full scroll
-    let target = 0;
-    let current = 0;
-
-    function computeTarget() {
-      // close within a screen-and-a-bit of scroll so the fold is visible
-      // while the laptop is still on screen (not after it has scrolled away)
-      const range = window.innerHeight * 0.7;
-      target = Math.min(Math.max(window.scrollY / range, 0), 1);
-    }
-
-    function render() {
-      // lerp toward target = "scrub" smoothing (feels tied to the scrollbar)
-      current += (target - current) * 0.1;
-      if (Math.abs(target - current) < 0.0005) current = target;
-      lid.style.transform = `rotateX(${-(current * CLOSE_DEG)}deg)`;
-      device.style.opacity = String(1 - current * (1 - FADE_TO));
-      requestAnimationFrame(render);
-    }
-
-    // Take over the lid once the CSS open animation has finished
-    let started = false;
-    function takeOver() {
-      if (started) return;
-      started = true;
-      lid.style.animation = 'none';
-      lid.style.transform = 'rotateX(0deg)';
-      window.addEventListener('scroll', computeTarget, { passive: true });
-      window.addEventListener('resize', computeTarget);
-      computeTarget();
-      render();
-    }
-
-    lid.addEventListener('animationend', (e) => {
-      if (e.animationName === 'lidOpen') takeOver();
-    });
-    setTimeout(takeOver, 2200); // fallback if animationend is missed
-  }
-
   // ─── Init ────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
     // GSAP-driven flourishes (skipped gracefully if the CDN fails to load)
@@ -105,7 +56,5 @@
       initHeadlineReveals();
       initMagneticButtons();
     }
-    // Core UX — pure DOM/CSS, always runs
-    initScrollClose();
   });
 })();
