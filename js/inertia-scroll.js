@@ -1,5 +1,5 @@
 /* ============================================
-   RAF Studio — Smooth Inertia Scroll Engine
+   RAF IA Solutions — Smooth Inertia Scroll Engine
    Pure Vanilla JS scroll momentum for desktop
    ============================================ */
 

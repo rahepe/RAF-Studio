@@ -1,5 +1,5 @@
 /* ============================================
-   RAF Studio — Main JavaScript
+   RAF IA Solutions — Main JavaScript
    Navigation, scroll, FAQ, interactions
    ============================================ */
 

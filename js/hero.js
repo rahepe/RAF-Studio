@@ -1,5 +1,5 @@
 /* ============================================
-   RAF Studio — Hero Motion
+   RAF IA Solutions — Hero Motion
    GSAP: magnetic buttons + headline reveal
    (The network visual lives in js/network-canvas.js)
    ============================================ */

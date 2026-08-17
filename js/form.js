@@ -1,5 +1,5 @@
 /* ============================================
-   RAF Studio — Form Logic
+   RAF IA Solutions — Form Logic
    Validation, submission handling & UX states
    ============================================ */
 
@@ -42,7 +42,7 @@
       const message = data.get('message') || '';
 
       const waText = encodeURIComponent(
-        `Olá! Vim pelo site da RAF Studio.\n\n` +
+        `Olá! Vim pelo site da RAF IA Solutions.\n\n` +
         `*Nome:* ${name}\n` +
         `*Email:* ${email}\n` +
         `*Telefone:* ${phone}\n` +

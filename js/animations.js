@@ -1,5 +1,5 @@
 /* ============================================
-   RAF Studio — Animations
+   RAF IA Solutions — Animations
    IntersectionObserver-driven entrance system
    ============================================ */
 

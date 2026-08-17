@@ -1,5 +1,5 @@
 /* ============================================
-   RAF Studio — Hero Network
+   RAF IA Solutions — Hero Network
    Canvas: uma rede de nós que se conectam por proximidade e reagem
    ao mouse — a "viagem" da tela até o mundo digital conectado.
    Substitui o antigo mockup estático de laptop abrindo/fechando.
