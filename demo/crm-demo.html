@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CRM — Demonstração</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --black:#000; --white:#fff;
+    --gray-950:#080808; --gray-900:#111111; --gray-850:#161616; --gray-800:#1c1c1c;
+    --gray-700:#2a2a2a; --gray-600:#444; --gray-400:#888; --gray-300:#aaa; --gray-200:#ccc;
+    --accent:#22C55E; --accent-light:#4ADE80; --accent-lighter:#86EFAC; --accent-dark:#16A34A;
+    --accent-glow: rgba(34,197,94,0.20);
+    --border-light: 1px solid rgba(255,255,255,0.10);
+    --border-subtle: 1px solid rgba(255,255,255,0.06);
+    --radius-md:12px; --radius-lg:18px; --radius-xl:24px; --radius-full:9999px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Inter', system-ui, -apple-system, sans-serif;
+    background: radial-gradient(circle at 20% 0%, rgba(34,197,94,0.08), transparent 45%), var(--gray-950);
+    color: var(--white);
+    min-height:100vh;
+    padding: 28px 32px 48px;
+  }
+
+  /* ─── Top bar ─── */
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:12px;
+    margin-bottom:28px;
+  }
+  .brand{ display:flex; align-items:center; gap:10px; font-weight:700; font-size:1.15rem; }
+  .brand-dot{ width:9px; height:9px; border-radius:50%; background:var(--accent); box-shadow:0 0 12px var(--accent-glow); }
+  .demo-badge{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:0.72rem; font-weight:600; letter-spacing:0.04em; text-transform:uppercase;
+    color: var(--accent-lighter);
+    background: rgba(34,197,94,0.10);
+    border: 1px solid rgba(34,197,94,0.25);
+    border-radius: var(--radius-full);
+    padding: 6px 14px;
+  }
+
+  /* ─── Stats ─── */
+  .stats{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:26px;
+  }
+  .stat-card{
+    background:var(--gray-900); border:var(--border-light); border-radius:var(--radius-lg);
+    padding:18px 20px;
+  }
+  .stat-label{ font-size:0.72rem; color:var(--gray-400); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px; }
+  .stat-value{ font-size:1.6rem; font-weight:700; }
+  .stat-value.accent{ color:var(--accent-light); }
+
+  /* ─── Board ─── */
+  .board{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:16px;
+  }
+  .column{
+    background:var(--gray-900); border:var(--border-subtle); border-radius:var(--radius-lg);
+    padding:14px; min-height:200px;
+  }
+  .column-head{
+    display:flex; align-items:center; justify-content:space-between;
+    font-size:0.78rem; font-weight:600; color:var(--gray-300);
+    padding: 4px 6px 12px;
+    text-transform:uppercase; letter-spacing:0.04em;
+  }
+  .column-count{
+    background:rgba(255,255,255,0.08); border-radius:var(--radius-full);
+    font-size:0.7rem; padding:2px 8px; color:var(--gray-200);
+  }
+  .card{
+    background:var(--gray-850); border:var(--border-subtle); border-radius:var(--radius-md);
+    padding:13px 14px; margin-bottom:10px; cursor:pointer;
+    transition: border-color .2s ease, transform .2s ease;
+  }
+  .card:hover{ border-color:rgba(34,197,94,0.4); transform:translateY(-2px); }
+  .card.active{ border-color:var(--accent); box-shadow:0 0 0 1px rgba(34,197,94,0.3); }
+  .card-top{ display:flex; align-items:center; gap:9px; margin-bottom:8px; }
+  .avatar{
+    width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:0.68rem; font-weight:700; color:var(--gray-950); flex-shrink:0;
+  }
+  .card-name{ font-size:0.86rem; font-weight:600; }
+  .card-meta{ font-size:0.74rem; color:var(--gray-400); display:flex; justify-content:space-between; }
+  .card-value{ color:var(--accent-lighter); font-weight:600; }
+
+  /* ─── Detail panel ─── */
+  .detail{
+    margin-top:22px; background:var(--gray-900); border:var(--border-light); border-radius:var(--radius-lg);
+    padding:20px 22px; display:none;
+  }
+  .detail.show{ display:block; }
+  .detail-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .detail-title{ font-size:1.05rem; font-weight:700; }
+  .detail-close{ cursor:pointer; color:var(--gray-400); font-size:0.8rem; background:none; border:none; font-family:inherit; }
+  .detail-close:hover{ color:var(--white); }
+  .detail-note{ color:var(--gray-300); font-size:0.85rem; line-height:1.6; }
+
+  .foot-note{
+    margin-top:28px; text-align:center; font-size:0.72rem; color:var(--gray-600);
+  }
+
+  @media (max-width: 900px){
+    .stats{ grid-template-columns:repeat(2,1fr); }
+    .board{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="brand"><span class="brand-dot"></span>CRM</div>
+    <span class="demo-badge">● Demonstração · dados fictícios</span>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <p class="stat-label">Leads ativos</p>
+      <p class="stat-value">18</p>
+    </div>
+    <div class="stat-card">
+      <p class="stat-label">Taxa de conversão</p>
+      <p class="stat-value accent">27%</p>
+    </div>
+    <div class="stat-card">
+      <p class="stat-label">Em negociação</p>
+      <p class="stat-value">R$ 14.200</p>
+    </div>
+    <div class="stat-card">
+      <p class="stat-label">Fechados no mês</p>
+      <p class="stat-value accent">5</p>
+    </div>
+  </div>
+
+  <div class="board" id="board"></div>
+
+  <div class="detail" id="detail">
+    <div class="detail-head">
+      <p class="detail-title" id="detail-title">—</p>
+      <button class="detail-close" id="detail-close">Fechar ✕</button>
+    </div>
+    <p class="detail-note" id="detail-note">—</p>
+  </div>
+
+  <p class="foot-note">Sistema de gestão em módulo próprio, construído sob medida. Nenhum dado nesta tela pertence a cliente real.</p>
+
+<script src="crm-demo.js"></script>
+
+</body>
+</html>

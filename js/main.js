@@ -164,13 +164,98 @@
         const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-        card.style.background = `radial-gradient(300px circle at ${x}px ${y}px, rgba(99,102,241,0.06), transparent 70%)`;
+        card.style.background = `radial-gradient(300px circle at ${x}px ${y}px, rgba(56,189,248,0.06), transparent 70%)`;
       });
 
       card.addEventListener('mouseleave', () => {
         card.style.background = '';
       });
     });
+  }
+
+  // ─── Portfolio drag-to-scroll + autoplay loop ─────
+  function initPortfolioDrag() {
+    const track = document.querySelector('.portfolio__grid');
+    if (!track) return;
+
+    let isDown = false;
+    let moved = false;
+    let startX = 0;
+    let scrollStart = 0;
+
+    track.addEventListener('mousedown', (e) => {
+      isDown = true;
+      moved = false;
+      track.classList.add('is-dragging');
+      startX = e.pageX;
+      scrollStart = track.scrollLeft;
+      stopAutoplay();
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDown = false;
+      track.classList.remove('is-dragging');
+      scheduleAutoplayResume();
+    });
+
+    track.addEventListener('mouseleave', () => {
+      if (!isDown) return;
+      isDown = false;
+      track.classList.remove('is-dragging');
+      scheduleAutoplayResume();
+    });
+
+    track.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      const dx = e.pageX - startX;
+      if (Math.abs(dx) > 5) moved = true;
+      track.scrollLeft = scrollStart - dx;
+    });
+
+    // Cards are <a> links (or non-interactive <article>s for the static ones) —
+    // suppress the click-through navigation when the gesture was a drag, not a tap.
+    track.querySelectorAll('a.portfolio-card').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        if (moved) e.preventDefault();
+      });
+    });
+
+    // ─ Autoplay: advance one page at a time, loop back to the start
+    // after the last card. Pauses while the visitor hovers, touches or drags.
+    const AUTOPLAY_INTERVAL = 4000;
+    const RESUME_DELAY = 3000;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let autoplayTimer = null;
+    let resumeTimer = null;
+
+    function stopAutoplay() {
+      clearInterval(autoplayTimer);
+      autoplayTimer = null;
+    }
+
+    function startAutoplay() {
+      if (reducedMotion || autoplayTimer) return;
+      autoplayTimer = setInterval(() => {
+        const maxScroll = track.scrollWidth - track.clientWidth;
+        if (track.scrollLeft >= maxScroll - 4) {
+          track.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          track.scrollBy({ left: track.clientWidth, behavior: 'smooth' });
+        }
+      }, AUTOPLAY_INTERVAL);
+    }
+
+    function scheduleAutoplayResume() {
+      clearTimeout(resumeTimer);
+      resumeTimer = setTimeout(startAutoplay, RESUME_DELAY);
+    }
+
+    track.addEventListener('mouseenter', stopAutoplay);
+    track.addEventListener('mouseleave', scheduleAutoplayResume);
+    track.addEventListener('touchstart', stopAutoplay, { passive: true });
+    track.addEventListener('touchend', scheduleAutoplayResume, { passive: true });
+
+    startAutoplay();
   }
 
   // ─── Init ─────────────────────────────────────────
@@ -182,6 +267,7 @@
     initWhatsAppLinks();
     initActiveNav();
     initCardGlow();
+    initPortfolioDrag();
 
     // Footer year
     const yearEl = document.getElementById('footer-year');
