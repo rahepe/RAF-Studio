@@ -1442,6 +1442,11 @@ body {
   padding-right: var(--space-10);
 }
 
+.form__select option {
+  background: var(--gray-900);
+  color: var(--white);
+}
+
 .form__submit {
   width: 100%;
   padding: var(--space-4) var(--space-8);
