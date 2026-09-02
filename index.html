@@ -14,6 +14,22 @@
     gtag('config', 'AW-16946945855');
   </script>
 
+  <!-- Event snippet for Contato conversion -->
+  <script>
+    function gtag_report_conversion(url) {
+      var callback = function () {
+        if (typeof(url) != 'undefined') {
+          window.location = url;
+        }
+      };
+      gtag('event', 'conversion', {
+          'send_to': 'AW-16946945855/K8UOCK7uhLwaEL--95A_',
+          'event_callback': callback
+      });
+      return false;
+    }
+  </script>
+
   <!-- ─── SEO ───────────────────────────────── -->
   <title>RAF IA Solutions: Soluções em Tecnologia Sob Medida</title>
   <meta name="description" content="Desenhamos soluções com tecnologia pro seu negócio: sites, automação, painéis de gestão e sistemas sob medida pro seu processo, aproximando sua empresa da excelência." />

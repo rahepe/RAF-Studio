@@ -124,6 +124,7 @@
         : WHATSAPP;
       el.addEventListener('click', (e) => {
         e.preventDefault();
+        if (typeof gtag_report_conversion === 'function') gtag_report_conversion();
         window.open(url, '_blank', 'noopener');
       });
     });

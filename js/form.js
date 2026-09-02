@@ -52,6 +52,7 @@
 
       // Small delay for UX, then redirect
       setTimeout(() => {
+        if (typeof gtag_report_conversion === 'function') gtag_report_conversion();
         window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${waText}`, '_blank', 'noopener');
 
         // Show success
