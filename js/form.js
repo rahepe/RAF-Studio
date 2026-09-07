@@ -50,11 +50,15 @@
         `*Mensagem:* ${message}`
       );
 
-      // Small delay for UX, then redirect
-      setTimeout(() => {
-        if (typeof gtag_report_conversion === 'function') gtag_report_conversion();
-        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${waText}`, '_blank', 'noopener');
+      // window.open precisa rodar no mesmo gesto do clique/submit — dentro
+      // de um setTimeout, bloqueadores de pop-up (inclusive o do navegador
+      // embutido do Instagram/Facebook) descartam silenciosamente, e o
+      // usuário via a mensagem de "sucesso" mesmo sem nada ter aberto.
+      if (typeof gtag_report_conversion === 'function') gtag_report_conversion();
+      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${waText}`, '_blank', 'noopener');
 
+      // Small delay só pra UX do spinner, sem bloquear o redirect acima
+      setTimeout(() => {
         // Show success
         form.style.display = 'none';
         if (successMsg) {

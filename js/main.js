@@ -116,16 +116,21 @@
   }
 
   // ─── WhatsApp links ───────────────────────────────
+  // href real (não "#" + window.open no click) — window.open quebra
+  // silenciosamente no navegador embutido do Instagram/Facebook, que é de
+  // onde vem o tráfego pago. Link nativo com target=_blank é o jeito
+  // confiável de abrir wa.me nesses webviews.
   function initWhatsAppLinks() {
     document.querySelectorAll('[data-whatsapp]').forEach((el) => {
       const msg = el.dataset.whatsapp || '';
       const url = msg
         ? `${WHATSAPP}?text=${encodeURIComponent(msg)}`
         : WHATSAPP;
-      el.addEventListener('click', (e) => {
-        e.preventDefault();
+      el.setAttribute('href', url);
+      el.setAttribute('target', '_blank');
+      el.setAttribute('rel', 'noopener');
+      el.addEventListener('click', () => {
         if (typeof gtag_report_conversion === 'function') gtag_report_conversion();
-        window.open(url, '_blank', 'noopener');
       });
     });
   }
