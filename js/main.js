@@ -131,6 +131,7 @@
       el.setAttribute('rel', 'noopener');
       el.addEventListener('click', () => {
         if (typeof gtag_report_conversion === 'function') gtag_report_conversion();
+        if (typeof fbq === 'function') fbq('track', 'Contact');
       });
     });
   }
